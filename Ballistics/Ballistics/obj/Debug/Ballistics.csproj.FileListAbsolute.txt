@@ -1,0 +1,5 @@
+C:\Users\Urban\Documents\Visual Studio 2008\Projects\Ballistics\Ballistics\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Urban\Documents\Visual Studio 2008\Projects\Ballistics\Ballistics\bin\Debug\Ballistics.exe
+C:\Users\Urban\Documents\Visual Studio 2008\Projects\Ballistics\Ballistics\bin\Debug\Ballistics.pdb
+C:\Users\Urban\Documents\Visual Studio 2008\Projects\Ballistics\Ballistics\obj\Debug\Ballistics.exe
+C:\Users\Urban\Documents\Visual Studio 2008\Projects\Ballistics\Ballistics\obj\Debug\Ballistics.pdb
