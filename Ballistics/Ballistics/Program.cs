@@ -43,7 +43,7 @@ namespace Ballistics
             double ballisticCoefficient = 0.465; // The ballistic coefficient for the projectile.
             double initialVelocity = 2650; // Initial velocity, in ft/s
             double sightHeightOverBore = 1.6; // The Sight height over bore, in inches.
-            double hillAngle = 0; // The shooting angle (uphill / downhill), in degrees.
+            double boreAngle = 0; // The shooting angle (uphill / downhill), in degrees.
             double zeroRange = 200; // The zero range of the rifle, in yards.
             double windspeed = 0; // The wind speed in miles per hour.
             double windangle = 0; // The wind angle (0=headwind, 90=right to left, 180=tailwind, 270/-90=left to right)
@@ -65,12 +65,12 @@ namespace Ballistics
             // to us, but is required for making a full ballistic solution.
             // It is left here to allow for zero-ing at altitudes (bc) different from the
             // final solution, or to allow for zero's other than 0" (ex: 3" high at 100 yards)
-            double boreAngle = BoreAngleNeededToAchieveZero(DragFunction.G1, ballisticCoefficient, initialVelocity, sightHeightOverBore, zeroRange, yIntercept);
+            double sightToBoreAngle = CalculateSightToBoreAngle(DragFunction.G1, ballisticCoefficient, initialVelocity, sightHeightOverBore, zeroRange, yIntercept);
 
             // Now we have everything needed to generate a full solution.
             // So we do.  The solution is stored in the pointer "sln" passed as the last argument.
             // k has the number of yards the solution is valid for, also the number of rows in the solution.
-            int rowCount = SolveAll(DragFunction.G1, ballisticCoefficient, initialVelocity, sightHeightOverBore, hillAngle, boreAngle, windspeed, windangle);
+            int rowCount = SolveAll(DragFunction.G1, ballisticCoefficient, initialVelocity, sightHeightOverBore, boreAngle, sightToBoreAngle, windspeed, windangle);
 
             // Now print a simple chart of X / Y trajectory spaced at 10yd increments
             int s = 0;
@@ -211,28 +211,28 @@ namespace Ballistics
             }
         }
 
-        static double calcFR(double Temperature, double Pressure, double RelativeHumidity)
+        static double CalculateFactorR(double Temperature, double Pressure, double RelativeHumidity)
         {
             double VPw = 4e-6 * Math.Pow(Temperature, 3) - 0.0004 * Math.Pow(Temperature, 2) + 0.0234 * Temperature - 0.2517;
             double FRH = 0.995 * (Pressure / (Pressure - (0.3783) * (RelativeHumidity) * VPw));
             return FRH;
         }
 
-        static double calcFP(double Pressure)
+        static double CalculateFactorP(double Pressure)
         {
             double Pstd = 29.53; // in-hg
             double FP = (Pressure - Pstd) / (Pstd);
             return FP;
         }
 
-        static double calcFT(double Temperature, double Altitude)
+        static double CalculateFactorT(double Temperature, double Altitude)
         {
             double Tstd = -0.0036 * Altitude + 59;
             double FT = (Temperature - Tstd) / (459.6 + Tstd);
             return FT;
         }
 
-        static double calcFA(double Altitude)
+        static double CalculateFactorA(double Altitude)
         {
             double fa = -4e-15 * Math.Pow(Altitude, 3) + 4e-10 * Math.Pow(Altitude, 2) - 3e-5 * Altitude + 1;
             return (1 / fa);
@@ -255,10 +255,10 @@ namespace Ballistics
         */
         static double DragCoefficientAtmosphericCorrection(double DragCoefficient, double Altitude_feet, double Barometer_hg, double Temperature_f, double RelativeHumidity)
         {
-            double FA = calcFA(Altitude_feet);
-            double FT = calcFT(Temperature_f, Altitude_feet);
-            double FR = calcFR(Temperature_f, Barometer_hg, RelativeHumidity);
-            double FP = calcFP(Barometer_hg);
+            double FA = CalculateFactorA(Altitude_feet);
+            double FT = CalculateFactorT(Temperature_f, Altitude_feet);
+            double FR = CalculateFactorR(Temperature_f, Barometer_hg, RelativeHumidity);
+            double FP = CalculateFactorP(Barometer_hg);
 
             // Calculate the atmospheric correction factor
             double CD = (FA * (1 + FT - FP) * FR);
@@ -278,7 +278,7 @@ namespace Ballistics
                 Returns the amount of windage correction, in inches, required to achieve zero on a target at the given range.
                 
         */
-        static double WindageCorrectionRequiredToAchieveZero(double WindSpeed_mile_hr, double Velocity_feet_sec, double range_feet, double time)
+        static double WindageCorrection(double WindSpeed_mile_hr, double Velocity_feet_sec, double range_feet, double time)
         {
             double Vw = WindSpeed_mile_hr * 17.60; // Convert to inches per second.
             return (Vw * (time - range_feet / Velocity_feet_sec));
@@ -325,7 +325,7 @@ namespace Ballistics
             Return Value:
                 Returns the angle of the bore relative to the sighting system, in degrees.
         */
-        static double BoreAngleNeededToAchieveZero(DragFunction DragFunction, double DragCoefficient, double Velocity_feet_sec, double SightHeight_inch, double ZeroRange_yard, double yIntercept_inch)
+        static double CalculateSightToBoreAngle(DragFunction DragFunction, double DragCoefficient, double Velocity_feet_sec, double SightHeight_inch, double ZeroRange_yard, double yIntercept_inch)
         {
             // Numerical Integration variables
             double t = 0;
@@ -416,10 +416,10 @@ namespace Ballistics
                 Velocity:  The projectile initial velocity.
                 SightHeight:  The height of the sighting system above the bore centerline.  
                                 Most scopes are in the 1.5"-2.0" range.
-                HillAngle:  The uphill or downhill shooting angle, in degrees.  Usually 0, but can be anything from
+                BoreAngle:  The uphill or downhill shooting angle, in degrees.  Usually 0, but can be anything from
                                 90 (directly up), to -90 (directly down).
-                BoreAngle:  The angle of the sighting system relative to the bore, in degrees.  This can be easily computed
-                            using the BoreAngle() function documented above.
+                SightToBoreAngle:  The angle of the sighting system relative to the bore, in degrees.  This can be easily computed
+                            using the CalculateSightToBoreAngle() function documented above.
                 WindSpeed:  The wind velocity, in mi/hr
                 WindAngle:  The angle at which the wind is approaching from, in degrees.
                             0 degrees is a straight headwind
@@ -435,7 +435,7 @@ namespace Ballistics
                             solution.  This also indicates the maximum number of rows in the solution matrix,
                             and should not be exceeded in order to avoid a memory segmentation fault.
         */
-        static int SolveAll(DragFunction DragFunction, double DragCoefficient, double Velocity_feet_sec, double SightHeight_inch, double HillAngle, double BoreAngle, double WindSpeed_mile_hr, double WindAngle)
+        static int SolveAll(DragFunction DragFunction, double DragCoefficient, double Velocity_feet_sec, double SightHeight_inch, double BoreAngle, double SightToBoreAngle, double WindSpeed_mile_hr, double WindAngle)
         {
             // seconds
             double t = 0;
@@ -453,11 +453,11 @@ namespace Ballistics
             double crosswind_mile_hr = CrossWindVelocity(WindSpeed_mile_hr, WindAngle);
 
             // feet per second
-            double Gy = GRAVITY * Math.Cos(DegtoRad((HillAngle + BoreAngle)));
-            double Gx = GRAVITY * Math.Sin(DegtoRad((HillAngle + BoreAngle)));
+            double Gy = GRAVITY * Math.Cos(DegtoRad((BoreAngle + SightToBoreAngle)));
+            double Gx = GRAVITY * Math.Sin(DegtoRad((BoreAngle + SightToBoreAngle)));
 
-            vx = Velocity_feet_sec * Math.Cos(DegtoRad(BoreAngle));
-            vy = Velocity_feet_sec * Math.Sin(DegtoRad(BoreAngle));
+            vx = Velocity_feet_sec * Math.Cos(DegtoRad(SightToBoreAngle));
+            vy = Velocity_feet_sec * Math.Sin(DegtoRad(SightToBoreAngle));
 
             y = -SightHeight_inch / 12;
 
@@ -486,7 +486,7 @@ namespace Ballistics
                     projectile.Path = y * 12;                       // Path in inches
                     projectile.MOA = -RadtoMOA(Math.Atan(y / x));   // Correction in MOA
                     projectile.Time = t + dt;                       // Time in s
-                    projectile.Windage = WindageCorrectionRequiredToAchieveZero(crosswind_mile_hr, Velocity_feet_sec, x, t + dt); // Windage in inches
+                    projectile.Windage = WindageCorrection(crosswind_mile_hr, Velocity_feet_sec, x, t + dt); // Windage in inches
                     projectile.WindageMOA = RadtoMOA(Math.Atan(projectile.Windage / (12 * x))); // Windage in MOA
                     projectile.Velocity = v;                        // Velocity (combined)
                     projectile.Vx = vx;                             // Velocity (x)
