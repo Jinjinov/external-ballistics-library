@@ -4,6 +4,10 @@ C# port of the GNU Ballistics Library originally created by Derek Yates
 original code can be found at:
 https://sourceforge.net/projects/ballisticslib/
 
+"Ballistics" contains C# code
+
+"BallisticsLibrary" contains C++ code
+
 Two bugs were fixed:
 
 #1. bug in original code:
