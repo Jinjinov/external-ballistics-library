@@ -84,12 +84,12 @@ namespace Ballistics
 
         // A function to calculate ballistic retardation values based on standard drag functions.
         /* Arguments:
-		        DragFunction:  G1, G2, G3, G4, G5, G6, G7, or G8.  All are enumerated above.
-		        DragCoefficient:  The coefficient of drag for the projectile for the given drag function.
-		        Vi:  The Velocity of the projectile.
-        	
-	        Return Value: 
-		        The function returns the projectile drag retardation velocity, in ft/s per second.
+                DragFunction:  G1, G2, G3, G4, G5, G6, G7, or G8.  All are enumerated above.
+                DragCoefficient:  The coefficient of drag for the projectile for the given drag function.
+                Velocity:  The Velocity of the projectile.
+            
+            Return Value: 
+                The function returns the projectile drag retardation velocity, in ft/s per second.
         */
         static double DragRetardationVelocity(DragFunction DragFunction, double DragCoefficient, double Velocity_feet_sec)
         {
@@ -241,17 +241,17 @@ namespace Ballistics
         // A function to correct a "standard" Drag Coefficient for differing atmospheric conditions.
         // Returns the corrected drag coefficient for supplied drag coefficient and atmospheric conditions.
         /* Arguments:
-		        DragCoefficient:  The coefficient of drag for a given projectile.
-		        Altitude:  The altitude above sea level in feet.  Standard altitude is 0 feet above sea level.
-		        Barometer:  The barometric pressure in inches of mercury (in Hg).
-					        This is not "absolute" pressure, it is the "standardized" pressure reported in the papers and news.
-					        Standard pressure is 29.53 in Hg.
-		        Temperature:  The temperature in Fahrenheit.  Standard temperature is 59 degrees.
-		        RelativeHumidity:  The relative humidity fraction.  Ranges from 0.00 to 1.00, with 0.50 being 50% relative humidity.
-							        Standard humidity is 78%
+                DragCoefficient:  The coefficient of drag for a given projectile.
+                Altitude:  The altitude above sea level in feet.  Standard altitude is 0 feet above sea level.
+                Barometer:  The barometric pressure in inches of mercury (in Hg).
+                            This is not "absolute" pressure, it is the "standardized" pressure reported in the papers and news.
+                            Standard pressure is 29.53 in Hg.
+                Temperature:  The temperature in Fahrenheit.  Standard temperature is 59 degrees.
+                RelativeHumidity:  The relative humidity fraction.  Ranges from 0.00 to 1.00, with 0.50 being 50% relative humidity.
+                                    Standard humidity is 78%
 
-	        Return Value:
-		        The function returns a ballistic coefficient, corrected for the supplied atmospheric conditions.
+            Return Value:
+                The function returns a ballistic coefficient, corrected for the supplied atmospheric conditions.
         */
         static double DragCoefficientAtmosphericCorrection(double DragCoefficient, double Altitude_feet, double Barometer_hg, double Temperature_f, double RelativeHumidity)
         {
@@ -269,14 +269,14 @@ namespace Ballistics
         // given flight time in a vacuum, and given flight time in real life.
         // Returns the windage correction needed in inches.
         /* Arguments:
-		        WindSpeed:  The wind velocity in mi/hr.
-		        Vi:  The initial velocity of the projectile (muzzle velocity).
-		        x:  The range at which you wish to determine windage, in feet.
-		        t:  The time it has taken the projectile to traverse the range x, in seconds.
-        	
-	        Return Value:
-		        Returns the amount of windage correction, in inches, required to achieve zero on a target at the given range.
-        		
+                WindSpeed:  The wind velocity in mi/hr.
+                Velocity:  The initial velocity of the projectile (muzzle velocity).
+                range:  The range at which you wish to determine windage, in feet.
+                time:  The time it has taken the projectile to traverse the range x, in seconds.
+            
+            Return Value:
+                Returns the amount of windage correction, in inches, required to achieve zero on a target at the given range.
+                
         */
         static double WindageCorrectionRequiredToAchieveZero(double WindSpeed_mile_hr, double Velocity_feet_sec, double range_feet, double time)
         {
@@ -286,15 +286,15 @@ namespace Ballistics
 
         // Functions to resolve any wind / angle combination into headwind and crosswind components.
         /* Arguments:
-		        WindSpeed:  The wind velocity, in mi/hr.
-		        WindAngle:  The angle from which the wind is coming, in degrees.
-					        0 degrees is from straight ahead
-					        90 degrees is from right to left
-					        180 degrees is from directly behind
-					        270 or -90 degrees is from left to right.
-        	
-	        Return value:
-		        Returns the headwind or crosswind velocity component, in mi/hr.
+                WindSpeed:  The wind velocity, in mi/hr.
+                WindAngle:  The angle from which the wind is coming, in degrees.
+                            0 degrees is from straight ahead
+                            90 degrees is from right to left
+                            180 degrees is from directly behind
+                            270 or -90 degrees is from left to right.
+            
+            Return value:
+                Returns the headwind or crosswind velocity component, in mi/hr.
         */
         static double HeadWindVelocity(double WindSpeed_mile_hr, double WindAngle)
         {
@@ -312,18 +312,18 @@ namespace Ballistics
         // A function to determine the bore angle needed to achieve a target zero at Range yards
         // (at standard conditions and on level ground.)
         /*  Arguments: 
-		        DragFunction:  The drag function to use (G1, G2, G3, G5, G6, G7, G8)
-		        DragCoefficient:  The coefficient of drag for the projectile, for the supplied drag function.
-		        Vi:  The initial velocity of the projectile, in feet/s
-		        SightHeight:  The height of the sighting system above the bore centerline, in inches. 
-					          Most scopes fall in the 1.6 to 2.0 inch range.
-		        ZeroRange:  The range in yards, at which you wish the projectile to intersect yIntercept.
-		        yIntercept:  The height, in inches, you wish for the projectile to be when it crosses ZeroRange yards.
-					        This is usually 0 for a target zero, but could be any number.  For example if you wish
-					        to sight your rifle in 1.5" high at 100 yards, then you would set yIntercept to 1.5, and ZeroRange to 100
-        					
-	        Return Value:
-		        Returns the angle of the bore relative to the sighting system, in degrees.
+                DragFunction:  The drag function to use (G1, G2, G3, G5, G6, G7, G8)
+                DragCoefficient:  The coefficient of drag for the projectile, for the supplied drag function.
+                Velocity:  The initial velocity of the projectile, in feet/s
+                SightHeight:  The height of the sighting system above the bore centerline, in inches. 
+                              Most scopes fall in the 1.6 to 2.0 inch range.
+                ZeroRange:  The range in yards, at which you wish the projectile to intersect yIntercept.
+                yIntercept:  The height, in inches, you wish for the projectile to be when it crosses ZeroRange yards.
+                            This is usually 0 for a target zero, but could be any number.  For example if you wish
+                            to sight your rifle in 1.5" high at 100 yards, then you would set yIntercept to 1.5, and ZeroRange to 100
+                            
+            Return Value:
+                Returns the angle of the bore relative to the sighting system, in degrees.
         */
         static double BoreAngleNeededToAchieveZero(DragFunction DragFunction, double DragCoefficient, double Velocity_feet_sec, double SightHeight_inch, double ZeroRange_yard, double yIntercept_inch)
         {
@@ -365,12 +365,12 @@ namespace Ballistics
                     v = Math.Sqrt(vx * vx + vy * vy);
                     dt = 1 / v;
 
-                    // Compute acceleration using the drag function retardation	
+                    // Compute acceleration using the drag function retardation.
                     dv = DragRetardationVelocity(DragFunction, DragCoefficient, v);
                     dvx = -(vx / v) * dv;
                     dvy = -(vy / v) * dv;
 
-                    // Compute velocity, including the resolved gravity vectors.	
+                    // Compute velocity, including the resolved gravity vectors.
                     vx += dt * dvx + dt * Gx;
                     vy += dt * dvy + dt * Gy;
 
@@ -411,29 +411,29 @@ namespace Ballistics
 
         // A function to generate a ballistic solution table in 1 yard increments, up to __BCOMP_MAXRANGE__.
         /* Arguments:
-		        DragFunction:  The drag function you wish to use for the solution (G1, G2, G3, G5, G6, G7, or G8)
-		        DragCoefficient:  The coefficient of drag for the projectile you wish to model.
-		        Vi:  The projectile initial velocity.
-		        SightHeight:  The height of the sighting system above the bore centerline.  
-						        Most scopes are in the 1.5"-2.0" range.
-		        ShootingAngle:  The uphill or downhill shooting angle, in degrees.  Usually 0, but can be anything from
-						        90 (directly up), to -90 (directly down).
-		        ZeroAngle:  The angle of the sighting system relative to the bore, in degrees.  This can be easily computed
-					        using the ZeroAngle() function documented above.
-		        WindSpeed:  The wind velocity, in mi/hr
-		        WindAngle:  The angle at which the wind is approaching from, in degrees.
-					        0 degrees is a straight headwind
-					        90 degrees is from right to left
-					        180 degrees is a straight tailwind
-					        -90 or 270 degrees is from left to right.
-		        Solution:	A pointer provided for accessing the solution after it has been generated.
-					        Memory for this pointer is allocated in the function, so the user does not need
-					        to worry about it.  This solution can be passed to the retrieval functions to get
-					        useful data from the solution.
-		        Return Value:
-					        This function returns an integer representing the maximum valid range of the
-					        solution.  This also indicates the maximum number of rows in the solution matrix,
-					        and should not be exceeded in order to avoid a memory segmentation fault.
+                DragFunction:  The drag function you wish to use for the solution (G1, G2, G3, G5, G6, G7, or G8)
+                DragCoefficient:  The coefficient of drag for the projectile you wish to model.
+                Velocity:  The projectile initial velocity.
+                SightHeight:  The height of the sighting system above the bore centerline.  
+                                Most scopes are in the 1.5"-2.0" range.
+                HillAngle:  The uphill or downhill shooting angle, in degrees.  Usually 0, but can be anything from
+                                90 (directly up), to -90 (directly down).
+                BoreAngle:  The angle of the sighting system relative to the bore, in degrees.  This can be easily computed
+                            using the BoreAngle() function documented above.
+                WindSpeed:  The wind velocity, in mi/hr
+                WindAngle:  The angle at which the wind is approaching from, in degrees.
+                            0 degrees is a straight headwind
+                            90 degrees is from right to left
+                            180 degrees is a straight tailwind
+                            -90 or 270 degrees is from left to right.
+                Solution:	A pointer provided for accessing the solution after it has been generated.
+                            Memory for this pointer is allocated in the function, so the user does not need
+                            to worry about it.  This solution can be passed to the retrieval functions to get
+                            useful data from the solution.
+                Return Value:
+                            This function returns an integer representing the maximum valid range of the
+                            solution.  This also indicates the maximum number of rows in the solution matrix,
+                            and should not be exceeded in order to avoid a memory segmentation fault.
         */
         static int SolveAll(DragFunction DragFunction, double DragCoefficient, double Velocity_feet_sec, double SightHeight_inch, double HillAngle, double BoreAngle, double WindSpeed_mile_hr, double WindAngle)
         {
@@ -470,27 +470,27 @@ namespace Ballistics
 
                 v = Math.Sqrt(vx * vx + vy * vy);
 
-                // Compute acceleration using the drag function retardation	
+                // Compute acceleration using the drag function retardation.
                 dv = DragRetardationVelocity(DragFunction, DragCoefficient, v + headwind_mile_hr * 5280.0 / 3600.0);
                 dvx = -(vx / v) * dv;
                 dvy = -(vy / v) * dv;
 
-                // Compute velocity, including the resolved gravity vectors.	
+                // Compute velocity, including the resolved gravity vectors.
                 vx += dt * dvx + dt * Gx;
                 vy += dt * dvy + dt * Gy;
 
                 if (x / 3 >= n)
                 {
                     Projectile projectile = new Projectile();
-                    projectile.Range = x / 3;							                     // Range in yards
-                    projectile.Path = y * 12;							                     // Path in inches
-                    projectile.MOA = -RadtoMOA(Math.Atan(y / x));			                 // Correction in MOA
-                    projectile.Time = t + dt;							                     // Time in s
-                    projectile.Windage = WindageCorrectionRequiredToAchieveZero(crosswind_mile_hr, Velocity_feet_sec, x, t + dt);  // Windage in inches
+                    projectile.Range = x / 3;                       // Range in yards
+                    projectile.Path = y * 12;                       // Path in inches
+                    projectile.MOA = -RadtoMOA(Math.Atan(y / x));   // Correction in MOA
+                    projectile.Time = t + dt;                       // Time in s
+                    projectile.Windage = WindageCorrectionRequiredToAchieveZero(crosswind_mile_hr, Velocity_feet_sec, x, t + dt); // Windage in inches
                     projectile.WindageMOA = RadtoMOA(Math.Atan(projectile.Windage / (12 * x))); // Windage in MOA
-                    projectile.Velocity = v;								                 // Velocity (combined)
-                    projectile.Vx = vx;								                         // Velocity (x)
-                    projectile.Vy = vy;								                         // Velocity (y)
+                    projectile.Velocity = v;                        // Velocity (combined)
+                    projectile.Vx = vx;                             // Velocity (x)
+                    projectile.Vy = vy;                             // Velocity (y)
                     ProjectileYards.Add(projectile);
                     n++;
                 }
