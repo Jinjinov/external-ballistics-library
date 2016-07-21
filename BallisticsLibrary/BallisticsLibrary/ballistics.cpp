@@ -29,7 +29,7 @@ int main()
    double sightToBoreAngle = projectile.CalculateSightToBoreAngle(zeroRange,yIntercept);
 
    double boreAngle = 0; // The shooting angle (uphill / downhill), in degrees.
-   projectile.Initialize(boreAngle,sightToBoreAngle);
+   projectile.Fire(boreAngle,sightToBoreAngle);
 
    // Now we have everything needed to generate a full solution.
    // So we do.  The solution is stored in the pointer "sln" passed as the last argument.
@@ -178,7 +178,7 @@ double Projectile::CalculateSightToBoreAngle(double ZeroRange_yard, double yInte
    return RadtoDeg(angle); // Convert to degrees for return value.
 }
 
-void Projectile::Initialize(double BoreAngle, double SightToBoreAngle)
+void Projectile::Fire(double BoreAngle, double SightToBoreAngle)
 {
    this->Gy = GRAVITY * cos(DegtoRad((BoreAngle + SightToBoreAngle)));
    this->Gx = GRAVITY * sin(DegtoRad((BoreAngle + SightToBoreAngle)));

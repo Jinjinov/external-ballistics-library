@@ -74,7 +74,7 @@ public:
       delete[] aProjectilePath;
    }
 
-   void Initialize(double BoreAngle, double SightToBoreAngle);
+   void Fire(double BoreAngle, double SightToBoreAngle);
    int Update(double &dt, double headwind_mile_hr, double crosswind_mile_hr);
 
    // A function to calculate ballistic retardation values based on standard drag functions.
