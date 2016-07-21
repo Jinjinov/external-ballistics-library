@@ -6,11 +6,11 @@ https://sourceforge.net/projects/ballisticslib/
 
 "Ballistics" contains C# code - minimal changes from the original code
 
-"BallisticsLibrary" contains C++ code - refactored from procedural functions to OOP
+"BallisticsLibrary" contains C++ code - refactored from procedural functions to OOP. This is **very useful** if you need multiple projectiles - if you are making a game and/or you want to control the calculation step yourself.
 
 Two bugs were fixed:
 
-#1. bug in original code:
+##1. bug in original code:
 
 dv = retard(DragFunction,DragCoefficient,v+headwind);
 
@@ -22,7 +22,7 @@ should be:
 
 dv = retard(DragFunction,DragCoefficient,v+headwind*5280.0/3600.0);
 
-#2. bug in original code:
+##2. bug in original code:
 
 ptr[10*n+5]=RadtoMOA(atan(ptr[10*n+4])); // Windage in MOA
 
